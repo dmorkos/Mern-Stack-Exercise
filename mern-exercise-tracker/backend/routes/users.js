@@ -9,9 +9,9 @@ router.route('/').get((req,res)=> {
     .catch(err => res.status(400).json('Error: ' + err))// if there is an error return a error msg
 });
 // handles http post requests /add 
-router.route('./add').post((req,res)=> {
-    const userName = req.body.userName;
-    const newUser = new User({userName});
+router.route('/add').post((req,res)=> {
+    const username = req.body.username;
+    const newUser = new User({username});
     newUser.save()
         .then(()=>res.json('User added! '))
         .catch(err => res.status(400).json('Error: ' + err))

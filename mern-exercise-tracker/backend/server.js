@@ -21,11 +21,11 @@ mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true}
 const exercisesRouter = require('./routes/exercises');
 const usersRouter = require('./routes/users');
 
-app.use('./exercises', exercisesRouter);
-app.use('./users', usersRouter);
+app.use('/exercises', exercisesRouter);
+app.use('/users', usersRouter);
 
 
 // This is what starts the server, listening on a certain port
 app.listen(port , () =>{
     console.log(`Server is running on port: ${port}`)
-})
+});
