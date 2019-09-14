@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
 export default class CreateExercise extends Component {
     constructor(props) {
@@ -22,6 +24,15 @@ export default class CreateExercise extends Component {
             date: new Date(),
             users: []
         }
+    }
+    // this is a react lifecycle method 
+    // will automatically get called right before anything gets displayed on the screen
+    componentDidMount() {
+        this.setState({
+            users: ['test users'],
+            username: 'testUser'
+        })
+
     }
     onChangeUserName(e) {
        this.setState({
@@ -60,9 +71,64 @@ export default class CreateExercise extends Component {
 
     render() {
         return (
-            <div>
-                <p>Your in the Create exercise  component</p>
-            </div>
+          <div>
+              <h3>Create new exercise log </h3>
+              <form onSubmit={this.onSubmit}>
+                  <div className="form-group">
+                      <label>UserName</label>
+                      <select ref = "userInput"
+                        required
+                        className="form-control"
+                        value = {this.state.username}
+                        onChange={this.onChangeUserName}>
+                         {
+                             // getting data from the db and using that data to be added to the dropdown method
+                            // This.state.users => give you an array of all the users 
+                            //from mongodb.map allows us to map each element of the array 
+                            // 
+                            this.state.users.map(function(user) {
+                                //it will return an option which is part of the select box
+                                return <option
+                                    key={user}
+                                    value={user}>{user}
+                                    </option>;
+                            })
+                        }
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label>Description</label>
+                        <input type = "test"
+                            required
+                            className="form-control"
+                            value={this.state.description}
+                            onChange = {this.onChangeDescription}
+                            />
+                    </div>
+                    <div className="form-group">
+                        <label>Duration in (m)</label>
+                        <input 
+                            type = "text"
+                            className="form-control"
+                            value={this.state.duration}
+                            onChange = {this.onChangeDuration}
+                            />
+                    </div>
+                    <div className="form-group">
+                        <label>Date: </label>
+                        <div>
+                            <DatePicker
+                                Selected={this.state.date}
+                                onChange={this.onChangeDate}
+                            />
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <input type="submit" value = "Create Exercise Log" className="btn btn-primary"/>
+                    </div>
+
+              </form>
+          </div>
         )
     }
 }
