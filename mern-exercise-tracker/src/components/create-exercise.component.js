@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import axios from 'axios';
 
 export default class CreateExercise extends Component {
     constructor(props) {
@@ -14,6 +15,7 @@ export default class CreateExercise extends Component {
         this.onChangeDescription = this.onChangeDescription.bind(this);
         this.onChangeDuration = this.onChangeDuration.bind(this);
         this.onChangeDate = this.onChangeDate.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
             // we will create properties of the state that will correspond to
@@ -28,26 +30,33 @@ export default class CreateExercise extends Component {
     // this is a react lifecycle method 
     // will automatically get called right before anything gets displayed on the screen
     componentDidMount() {
-        this.setState({
-            users: ['test users'],
-            username: 'testUser'
+       axios.get('http://localhost:5000/users/')
+        .then(response => {
+            // now we want to check if there is a response 
+            if(response.data.length > 0) {
+                this.setState({
+                    users: response.data.map(user => user.username), // data will be an array and we will map the array 
+                    username: response.data[0].username    // which will allow us to return something for every
+                                                            // elemement in the array
+                })
+            }
         })
 
     }
     onChangeUserName(e) {
        this.setState({
             username: e.target.value // target is the textbox
-       });
+       })
     }
     onChangeDescription(e) {
         this.setState({
             description: e.target.value // target is the textbox
-        });
+        })
      }
      onChangeDuration(e) {
         this.setState({
-             username: e.target.value // target is the textbox
-        });
+             duration: e.target.value // target is the textbox
+        })
      }
      
      onChangeDate(date) {
@@ -65,6 +74,10 @@ export default class CreateExercise extends Component {
              date: this.state.date
          }
          console.log(exercise)
+         // adding the exercise in the database by sending a HTTP request 
+         axios.post('http://localhost:5000/exercises/add', exercise)
+            .then(res => console.log(res.data));
+
          window.location = '/' // got back to home page
      }
 
@@ -118,7 +131,7 @@ export default class CreateExercise extends Component {
                         <label>Date: </label>
                         <div>
                             <DatePicker
-                                Selected={this.state.date}
+                                selected={this.state.date}
                                 onChange={this.onChangeDate}
                             />
                         </div>
